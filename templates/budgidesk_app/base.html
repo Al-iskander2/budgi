@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>{% block title %}BudgiDesk{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'budgidesk_app/css/style.css' %}">
+</head>
+<body>
+    <header><h1>BudgiDesk</h1></header>
+    <nav><!-- menú --></nav>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

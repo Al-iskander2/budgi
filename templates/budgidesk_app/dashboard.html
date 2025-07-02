@@ -1,0 +1,10 @@
+{% extends 'budgidesk_app/base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h2>Bienvenido a tu panel</h2>
+<p>Aquí verás tu resumen financiero.</p>
+<ul>
+    <li><a href="{% url 'invoice_create' %}">Crear factura</a></li>
+    <li><a href="{% url 'tax_report' %}">Ver reporte fiscal</a></li>
+</ul>
+{% endblock %}
