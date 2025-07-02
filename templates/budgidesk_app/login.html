@@ -7,5 +7,7 @@
     <label>Usuario: <input type="text" name="username"></label><br>
     <label>Contraseña: <input type="password" name="password"></label><br>
     <button type="submit">Ingresar</button>
+    <p>Don't have an account? <a href="{% url 'register' %}">Create one here</a></p>
+
 </form>
 {% endblock %}
