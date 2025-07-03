@@ -6,7 +6,7 @@ from logic.debugger import debug, check_template_exists
 
 
 def login_view(request):
-    debug("🔑 Accessing login_view")
+    debug("Accessing login_view")
     check_template_exists("budgidesk_app/login.html")
 
     if request.method == "POST":
@@ -17,24 +17,38 @@ def login_view(request):
 
 
 def dashboard_view(request):
-    debug("📊 Accessing dashboard_view")
+    debug("Accessing dashboard_view")
     check_template_exists("budgidesk_app/dashboard.html")
     
     return render(request, "budgidesk_app/dashboard.html")
 
 
+def invoice_create_view(request):
+    debug("Accessing invoice_create_view")
+    check_template_exists("budgidesk_app/invoices/invoice_create.html")
+
+    return render(request, "budgidesk_app/invoices/invoice_create.html")
+
+
+def tax_report_view(request):
+    debug("Accessing tax_report_view")
+    check_template_exists("budgidesk_app/taxes/tax_report.html")
+
+    return render(request, "budgidesk_app/taxes/tax_report.html")
+
+
 def register_view(request):
-    debug("📝 Accessing register_view")
+    debug("Accessing register_view")
     check_template_exists("budgidesk_app/register.html")
 
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            debug("✅ User registered successfully")
-            return redirect('login')  # redirige al login después de registrarse
+            debug("User registered successfully")
+            return redirect('login')
         else:
-            debug("❌ Registration form invalid")
+            debug("Registration form invalid")
     else:
         form = UserCreationForm()
 
