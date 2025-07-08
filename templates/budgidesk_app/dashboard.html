@@ -1,10 +1,75 @@
 {% extends 'budgidesk_app/base.html' %}
+
 {% block title %}Dashboard{% endblock %}
+
 {% block content %}
-<h2>Bienvenido a tu panel</h2>
-<p>Aquí verás tu resumen financiero.</p>
-<ul>
-    <li><a href="{% url 'invoice_create' %}">Crear factura</a></li>
-    <li><a href="{% url 'tax_report' %}">Ver reporte fiscal</a></li>
-</ul>
+<div class="text-center mb-4">
+    <h2>Welcome to your dashboard</h2>
+    <p class="lead">Select an option to proceed:</p>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="col">
+        <div class="card h-100 text-center shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Create Invoice</h5>
+                <a href="{% url 'invoice_create' %}" class="btn btn-primary">Go</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="card h-100 text-center shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">View Invoices</h5>
+                <a href="{% url 'invoice_list' %}" class="btn btn-primary">Go</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="card h-100 text-center shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Tax Report</h5>
+                <a href="{% url 'tax_report' %}" class="btn btn-primary">Go</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="card h-100 text-center shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Income & Expenses</h5>
+                <a href="{% url 'balance_overview' %}" class="btn btn-primary">Go</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="card h-100 text-center shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Account Settings</h5>
+                <a href="{% url 'account_settings' %}" class="btn btn-primary">Go</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="card h-100 text-center shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Legal Templates</h5>
+                <a href="{% url 'legal_templates' %}" class="btn btn-primary">Go</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="card h-100 text-center shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Reminders</h5>
+                <a href="{% url 'reminders' %}" class="btn btn-primary">Go</a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

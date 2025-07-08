@@ -124,3 +124,9 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]  # 👈 para servir tu car
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Redirect unauthenticated users to login
+LOGIN_URL = "/login/"
+
+# Default primary key field type
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
