@@ -104,3 +104,55 @@ def reminders_view(request):
     debug("Accessing reminders_view")
     check_template_exists("budgidesk_app/reminders.html")
     return render(request, "budgidesk_app/reminders.html")
+
+def intro_view(request):
+    debug("Accessing intro_view")
+    check_template_exists("budgidesk_app/intro.html")
+    return render(request, "budgidesk_app/intro.html")
+
+@login_required
+def onboarding_view(request):
+    debug("Accessing onboarding_view")
+    check_template_exists("budgidesk_app/onboard.html")
+    return render(request, "budgidesk_app/onboard.html")
+
+
+def register_view(request):
+    debug("Accessing register_view")
+    check_template_exists("budgidesk_app/register.html")
+
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # 👈 iniciar sesión automáticamente
+            return redirect('onboarding')  # 👈 redirige al onboarding
+        else:
+            debug("Registration form invalid")
+    else:
+        form = UserCreationForm()
+
+    return render(request, 'budgidesk_app/register.html', {'form': form})
+
+
+from .models import FiscalProfile
+
+@login_required
+def onboarding_view(request):
+    debug("Accessing onboarding_view")
+    check_template_exists("budgidesk_app/onboard.html")
+
+    if request.method == "POST":
+        FiscalProfile.objects.create(
+            user=request.user,
+            full_name=request.POST.get("full_name"),
+            pps_number=request.POST.get("pps_number"),
+            birthdate=request.POST.get("birthdate"),
+            income=request.POST.get("income"),
+            business_type=request.POST.get("business_type"),
+        )
+        return redirect("dashboard")
+
+    return render(request, "budgidesk_app/onboard.html")
+
+

@@ -1,6 +1,6 @@
 from django.urls import path
 from django.shortcuts import redirect
-from django.contrib.auth.views import LogoutView  # ✅ Aquí importas la vista
+from django.contrib.auth.views import LogoutView
 from .views import (
     login_view,
     register_view,
@@ -12,13 +12,24 @@ from .views import (
     account_settings_view,
     legal_templates_view,
     reminders_view,
+    intro_view,           # nuevo
+    onboarding_view       # nuevo
 )
 
 urlpatterns = [
-    path("", lambda request: redirect("login")),
+    # Página principal (landing animada)
+    path("", intro_view, name="intro"),
+
+    # Autenticación
     path("login/", login_view, name="login"),
     path("register/", register_view, name="register"),
+    path("logout/", LogoutView.as_view(next_page="login"), name="logout"),
+
+    # Dashboard principal
     path("dashboard/", dashboard_view, name="dashboard"),
+
+    # Onboarding fiscal paso a paso
+    path("onboarding/", onboarding_view, name="onboarding"),
 
     # Facturación
     path("invoice/create/", invoice_create_view, name="invoice_create"),
@@ -34,7 +45,4 @@ urlpatterns = [
     path("account/settings/", account_settings_view, name="account_settings"),
     path("legal/templates/", legal_templates_view, name="legal_templates"),
     path("reminders/", reminders_view, name="reminders"),
-
-    # ✅ Logout
-    path("logout/", LogoutView.as_view(next_page="login"), name="logout"),
 ]

@@ -1,0 +1,67 @@
+{% extends 'budgidesk_app/base.html' %}
+
+{% block title %}Onboarding{% endblock %}
+
+{% block content %}
+<style>
+  .step { display: none; text-align: center; }
+  .step.active { display: block; }
+  input {
+    padding: 0.8rem;
+    font-size: 1rem;
+    width: 300px;
+    max-width: 80%;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+  button {
+    margin-top: 1rem;
+    padding: 0.7rem 1.2rem;
+    background-color: #673ab7;
+    color: white;
+    border: none;
+    border-radius: 5px;
+  }
+</style>
+
+<h2 class="text-center">Let's get to know you</h2>
+<form method="post">
+  {% csrf_token %}
+  <div class="step active" id="step1">
+    <p>What's your full name?</p>
+    <input type="text" name="full_name" required>
+    <button type="button" onclick="nextStep(1)">Next</button>
+  </div>
+
+  <div class="step" id="step2">
+    <p>Your PPS number:</p>
+    <input type="text" name="pps_number" required>
+    <button type="button" onclick="nextStep(2)">Next</button>
+  </div>
+
+  <div class="step" id="step3">
+    <p>Your date of birth:</p>
+    <input type="date" name="birthdate" required>
+    <button type="button" onclick="nextStep(3)">Next</button>
+  </div>
+
+  <div class="step" id="step4">
+    <p>Estimated income:</p>
+    <input type="number" name="income" required>
+    <button type="button" onclick="nextStep(4)">Next</button>
+  </div>
+
+  <div class="step" id="step5">
+    <p>Business type:</p>
+    <input type="text" name="business_type" required>
+    <button type="submit">Finish</button>
+  </div>
+</form>
+
+<script>
+  function nextStep(current) {
+    document.getElementById(`step${current}`).classList.remove("active");
+    document.getElementById(`step${current + 1}`).classList.add("active");
+  }
+</script>
+{% endblock %}

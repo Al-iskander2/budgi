@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>BudsiDesk – Intro</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/SplitText.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #ffffff;
+      color: #111;
+      padding: 2rem;
+    }
+    h1, h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    p, li {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      max-width: 800px;
+      margin: 0 auto 1rem auto;
+      text-align: center;
+    }
+    .center-btns {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    button {
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      background-color: #673ab7;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    footer {
+      margin-top: 4rem;
+      text-align: center;
+      font-size: 0.95rem;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. Hero principal -->
+  <h1 id="headline">Pay your taxes like magic.</h1>
+  <p>We take care of the numbers — so you don’t have to.</p>
+  <div class="center-btns">
+    <button>Get Started</button>
+  </div>
+  <div class="center-btns">
+  <button onclick="location.href='/register/'">Create Account</button>
+  <button onclick="location.href='/login/'">Login</button>
+</div>
+
+  <!-- 2. What is BudsiDesk? -->
+  <h2>What is BudsiDesk?</h2>
+  <p>
+    BudsiDesk is your personal tax & admin toolkit for solo business in Ireland.<br>
+    We help freelancers, creatives, and independent workers handle income, taxes, and legal docs — effortlessly.
+  </p>
+
+  <!-- 3. How does it work? -->
+  <h2>How does it work?</h2>
+  <ul>
+    <li>Create your account</li>
+    <li>Enter basic info — step by step</li>
+    <li>Check your dashboard</li>
+    <li>Pay only what you owe</li>
+  </ul>
+  <p>No jargon. No guesswork. Just clear steps and peace of mind.</p>
+
+  <!-- 4. Why BudsiDesk? -->
+  <h2>Why BudsiDesk?</h2>
+  <ul>
+    <li>Built for Irish self-employed</li>
+    <li>Irish Tax Estimator (Income Tax, PRSI, USC)</li>
+    <li>Custom Invoicing with VAT</li>
+    <li>Legal templates: NDA, GDPR</li>
+    <li>Reminders for tax dates, receipts, invoices</li>
+  </ul>
+
+  <!-- 5. Our Promise -->
+  <h2>Our Promise</h2>
+  <p>
+    We guide you. <br>
+    You stay compliant. <br>
+    Together, we keep it simple.
+  </p>
+
+  <!-- 6. Call to action -->
+  <div class="center-btns">
+    <button>Create Account</button>
+    <button>Learn More</button>
+    <button>Try Demo</button>
+  </div>
+
+  <!-- 7. Footer / FAQ ideas -->
+  <footer>
+    <h3>Frequently Asked Questions</h3>
+    <p>What taxes do I need to pay in Ireland?</p>
+    <p>Is BudsiDesk free?</p>
+    <p>How is my data protected?</p>
+    <p>Who is BudsiDesk for?</p>
+  </footer>
+
+  <!-- Animación de GSAP -->
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const split = new SplitText("#headline", { type: "chars" });
+      gsap.set("#headline", { opacity: 1 });
+      gsap.from(split.chars, {
+        opacity: 0,
+        y: 40,
+        duration: 0.6,
+        stagger: 0.05,
+        ease: "power3.out"
+      });
+    });
+  </script>
+
+</body>
+</html>
