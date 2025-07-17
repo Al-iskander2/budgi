@@ -1,3 +1,4 @@
 from django.contrib import admin
+from .models import FiscalProfile  # o los modelos que estés usando
 
-# Register your models here.
+admin.site.register(FiscalProfile)

@@ -1,0 +1,21 @@
+{% extends "budgidesk_app/base.html" %}
+{% load static %}
+
+{% block title %}Legal Templates{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Download Your Legal Documents</h2>
+    <ul class="list-group">
+        <li class="list-group-item">
+            <a href="{% static 'legal_templates_pdf/Templates.pdf' %}" download>📄 Service Agreements & NDAs</a>
+        </li>
+        <li class="list-group-item">
+            <a href="{% static 'legal_templates_pdf/Invoicing.pdf' %}" download>📄 Invoice Template</a>
+        </li>
+        <li class="list-group-item">
+            <a href="{% static 'legal_templates_pdf/UserInfo.pdf' %}" download>📄 User Info Form</a>
+        </li>
+    </ul>
+</div>
+{% endblock %}

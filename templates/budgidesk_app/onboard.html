@@ -1,67 +1,148 @@
-{% extends 'budgidesk_app/base.html' %}
-
-{% block title %}Onboarding{% endblock %}
 
 {% block content %}
-<style>
-  .step { display: none; text-align: center; }
-  .step.active { display: block; }
-  input {
-    padding: 0.8rem;
-    font-size: 1rem;
-    width: 300px;
-    max-width: 80%;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-  }
-  button {
-    margin-top: 1rem;
-    padding: 0.7rem 1.2rem;
-    background-color: #673ab7;
-    color: white;
-    border: none;
-    border-radius: 5px;
-  }
-</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Onboarding</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #ffffff;
+      margin: 0;
+      padding: 2rem;
+    }
 
-<h2 class="text-center">Let's get to know you</h2>
-<form method="post">
-  {% csrf_token %}
-  <div class="step active" id="step1">
-    <p>What's your full name?</p>
-    <input type="text" name="full_name" required>
-    <button type="button" onclick="nextStep(1)">Next</button>
-  </div>
+    h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #324EA2;
+    }
 
-  <div class="step" id="step2">
-    <p>Your PPS number:</p>
-    <input type="text" name="pps_number" required>
-    <button type="button" onclick="nextStep(2)">Next</button>
-  </div>
+    .step {
+      display: none;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(40px);
+    }
 
-  <div class="step" id="step3">
-    <p>Your date of birth:</p>
-    <input type="date" name="birthdate" required>
-    <button type="button" onclick="nextStep(3)">Next</button>
-  </div>
+    .step.active {
+      display: block;
+    }
 
-  <div class="step" id="step4">
-    <p>Estimated income:</p>
-    <input type="number" name="income" required>
-    <button type="button" onclick="nextStep(4)">Next</button>
-  </div>
+    .step p {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #324EA2;
+      margin-bottom: 1rem;
+    }
 
-  <div class="step" id="step5">
-    <p>Business type:</p>
-    <input type="text" name="business_type" required>
-    <button type="submit">Finish</button>
-  </div>
-</form>
+    input {
+      padding: 0.8rem;
+      font-size: 1rem;
+      width: 300px;
+      max-width: 80%;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
 
-<script>
-  function nextStep(current) {
-    document.getElementById(`step${current}`).classList.remove("active");
-    document.getElementById(`step${current + 1}`).classList.add("active");
-  }
-</script>
+    button {
+      margin-top: 1rem;
+      padding: 0.7rem 1.2rem;
+      background-color: #40D466;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #2ea64f;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Let's get to know you</h2>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="step active" id="step1">
+      <p>What's your full name?</p>
+      <input type="text" name="full_name" required>
+      <button type="button" onclick="nextStep(1)">Next</button>
+    </div>
+
+    <div class="step" id="step2">
+      <p>Your PPS number:</p>
+      <input type="text" name="pps_number" required>
+      <button type="button" onclick="nextStep(2)">Next</button>
+    </div>
+
+    <div class="step" id="step3">
+      <p>Your date of birth:</p>
+      <input type="date" name="birthdate" required>
+      <button type="button" onclick="nextStep(3)">Next</button>
+    </div>
+
+    <div class="step" id="step4">
+      <p>Estimated income:</p>
+      <input type="number" name="income" required>
+      <button type="button" onclick="nextStep(4)">Next</button>
+    </div>
+
+    <div class="step" id="step5">
+      <p>Business type:</p>
+      <input type="text" name="business_type" required>
+      <button type="submit">Finish</button>
+    </div>
+  </form>
+
+  {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+  {% endif %}
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const firstStep = document.querySelector(".step.active");
+      animateIn(firstStep);
+    });
+
+    function animateIn(el) {
+      gsap.to(el, {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: "power3.out"
+      });
+    }
+
+    function animateOut(el, onComplete) {
+      gsap.to(el, {
+        opacity: 0,
+        y: -40,
+        duration: 0.5,
+        ease: "power3.in",
+        onComplete: () => {
+          el.classList.remove("active");
+          if (onComplete) onComplete();
+        }
+      });
+    }
+
+    function nextStep(current) {
+      const currentStep = document.getElementById(`step${current}`);
+      const nextStep = document.getElementById(`step${current + 1}`);
+      
+      animateOut(currentStep, () => {
+        nextStep.classList.add("active");
+        animateIn(nextStep);
+      });
+    }
+  </script>
+
+</body>
+</html>
 {% endblock %}

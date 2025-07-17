@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f5f7fa;
+      color: #333;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    /* Top Nav Branding Bar */
+    .top-bar {
+      background: linear-gradient(to right, #40D466, #324EA2);
+      color: white;
+      padding: 1rem 2rem;
+      font-weight: bold;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .top-bar span {
+      font-weight: 800;
+      color: #01BF1F;
+    }
+
+    .top-bar .cta {
+      background: #fff;
+      color: #324EA2;
+      padding: 0.4rem 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .top-bar .cta:hover {
+      background: #eee;
+    }
+
+    header {
+      text-align: center;
+      padding: 3rem 1rem 1rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.3rem;
+      color: #324EA2;
+    }
+
+    p.subtitle {
+      font-size: 1.1rem;
+      color: #666;
+    }
+
+    .pricing-container {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding: 2rem 1rem 3rem;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .plan {
+      flex: 1 1 24%;
+      max-width: 260px;
+      background: #fff;
+      border-radius: 18px;
+      padding: 1.6rem;
+      min-height: 500px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease;
+      opacity: 0;
+      animation: slideUp 0.6s ease forwards;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-sizing: border-box;
+      border: 2px solid transparent;
+    }
+
+    .plan.highlight {
+      border: 2px solid #D3AF3F;
+      transform: scale(1.02);
+    }
+
+    .plan:nth-child(1) { animation-delay: 0.1s; }
+    .plan:nth-child(2) { animation-delay: 0.2s; }
+    .plan:nth-child(3) { animation-delay: 0.3s; }
+    .plan:nth-child(4) { animation-delay: 0.4s; }
+
+    .plan h2 {
+      font-size: 1.4rem;
+      margin-bottom: 0.5rem;
+      color: #324EA2;
+    }
+
+    .price {
+      font-size: 1.6rem;
+      color: #01BF1F;
+      margin: 1rem 0;
+      font-weight: bold;
+    }
+
+    .annual {
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 1rem;
+    }
+
+    .features {
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0;
+      flex-grow: 1;
+    }
+
+    .features li {
+      padding: 0.4rem 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .btn {
+      margin-top: 1rem;
+      padding: 0.6rem 1rem;
+      background: linear-gradient(to right, #40d466, #7498D4);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      font-weight: bold;
+      transition: transform 0.3s ease;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+    }
+
+    .btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #666;
+      padding-bottom: 2rem;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @media (max-width: 1024px) {
+      .plan {
+        width: 100%;
+        max-width: 380px;
+      }
+    }
+  </style>
+</head>
+<body>
+  {% include 'budgidesk_app/navbar.html' %}
+
+  <header>
+    <h1>Plans & Pricing</h1>
+    <p class="subtitle">Simple plans for solo pros — built to grow with you.</p>
+  </header>
+
+  <div class="pricing-container">
+
+    <!-- Budsi Lite -->
+    <div class="plan">
+      <h2>Budsi Lite</h2>
+      <p class="price">€0 / month</p>
+      <p class="annual">No credit card — just sign up & go!</p>
+      <ul class="features">
+        <li>Up to 5 invoices/month</li>
+        <li>Basic income tax calc.</li>
+        <li>Export to PDF</li>
+        <li>Limited budget tracker</li>
+        <li>Email reminders</li>
+        <li>Helpful resources</li>
+      </ul>
+      <button class="btn" disabled>Current Plan</button>
+    </div>
+
+    <!-- Budsi Smart -->
+    <div class="plan highlight">
+      <h2>Budsi Smart</h2>
+      <p class="price">€9 / month</p>
+      <p class="annual">or €90/year (save 17%)</p>
+      <ul class="features">
+        <li>Unlimited invoices</li>
+        <li>Budget planner + insights</li>
+        <li>VAT & income tax calc.</li>
+        <li>Up to 20 clients/projects</li>
+        <li>Dashboard & reports</li>
+        <li>Chat & email support</li>
+      </ul>
+      <a href="{% url 'checkout' %}?plan=smart_monthly" class="btn">Upgrade to Smart</a>
+    </div>
+
+    <!-- Budsi Elite -->
+    <div class="plan">
+      <h2>Budsi Elite</h2>
+      <p class="price">€12 / month</p>
+      <p class="annual">or €120/year (save 17%)</p>
+      <ul class="features">
+        <li>Everything in Smart</li>
+        <li>Smart invoice templates</li>
+        <li>Recurring invoices</li>
+        <li>Expense auto-categorisation</li>
+        <li>Legal templates (SOW, NDA)</li>
+        <li>Advanced reports & uploads</li>
+        <li>Priority support</li>
+      </ul>
+      <a href="{% url 'checkout' %}?plan=elite_monthly" class="btn">Go Elite</a>
+    </div>
+
+    <!-- Annual Info -->
+    <div class="plan">
+      <h2>Annual Plans</h2>
+      <p class="price">Save 17%</p>
+      <p class="annual">Choose annual and save money</p>
+      <ul class="features">
+        <li>Pay once per year</li>
+        <li>Cancel anytime</li>
+        <li>No hidden fees</li>
+        <li>Same benefits, better price</li>
+        <li>Peace of mind</li>
+      </ul>
+      <a href="{% url 'checkout' %}?plan=smart_annual" class="btn">Switch to Annual</a>
+    </div>
+
+  </div>
+
+  <footer>
+    All plans are GDPR-compliant and designed for Irish & EU freelancers. Cancel anytime. No hidden fees.
+  </footer>
+
+</body>
+</html>

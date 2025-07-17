@@ -2,6 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
+from logic.plan_tiers import require_plan
+from django.views.decorators.csrf import csrf_exempt
+
+
 
 
 
@@ -54,7 +58,16 @@ def register_view(request):
 def dashboard_view(request):
     debug("Accessing dashboard_view")
     check_template_exists("budgidesk_app/dashboard.html")
+
+    #  Verificar si el usuario ya tiene un perfil fiscal
+    from .models import FiscalProfile
+    try:
+        FiscalProfile.objects.get(user=request.user)
+    except FiscalProfile.DoesNotExist:
+        return redirect("onboarding")  #  si no hay perfil, va al onboarding
+
     return render(request, "budgidesk_app/dashboard.html")
+
 
 
 @login_required
@@ -156,3 +169,69 @@ def onboarding_view(request):
     return render(request, "budgidesk_app/onboard.html")
 
 
+def checkout_view(request):
+    plan = request.GET.get('plan', 'smart_monthly')
+
+    plan_options = {
+        'smart_monthly': {
+            'name': 'Budsi Smart',
+            'amount': 9,
+            'interval': 'month',
+        },
+        'elite_monthly': {
+            'name': 'Budsi Elite',
+            'amount': 12,
+            'interval': 'month',
+        },
+        'smart_annual': {
+            'name': 'Budsi Smart (Annual)',
+            'amount': 90,
+            'interval': 'year',
+        },
+        'elite_annual': {
+            'name': 'Budsi Elite (Annual)',
+            'amount': 120,
+            'interval': 'year',
+        }
+    }
+
+    if plan not in plan_options:
+        plan = 'smart_monthly'
+
+    plan_details = plan_options[plan]
+    plan_details['plan_code'] = plan
+
+    return render(request, 'budgidesk_app/payment.html', plan_details)
+
+@csrf_exempt
+@login_required
+def process_payment_view(request):
+    debug("Accessing process_payment_view")
+
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        card_number = request.POST.get("card_number")
+        exp_month = request.POST.get("exp_month")
+        cvc = request.POST.get("cvc")
+        plan_code = request.GET.get("plan", "smart_monthly")
+
+        debug(f"Submitted payment for plan: {plan_code} by {name}")
+
+        # En producción deberías integrar Stripe u otra pasarela aquí.
+
+        # Guardar el plan en el usuario
+        user = request.user
+        if "elite" in plan_code:
+            user.plan = "elite"
+        elif "smart" in plan_code:
+            user.plan = "smart"
+        else:
+            user.plan = "lite"
+
+        user.save()
+        debug(f" Plan actualizado: {user.plan}")
+
+        return redirect("dashboard")
+
+    return redirect("checkout")  # fallback si no es POST
