@@ -4,5 +4,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("budgidesk_app.urls")),  # 👈 esto conecta tus rutas
+    path("", include("budgidesk_app.urls")),  # 👈 conecta todas las rutas de tu app
 ]

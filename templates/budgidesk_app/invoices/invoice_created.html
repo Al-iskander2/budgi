@@ -1,0 +1,8 @@
+{% block content %}
+<div class="container">
+  <h1> Invoice Created!</h1>
+  <p>You have now created {{ profile.invoice_count }} invoices.</p>
+  <a href="{% url 'invoice_create' %}" class="btn btn-primary">Create Another</a>
+  <a href="{% url 'invoice_list' %}" class="btn btn-secondary">View Invoices</a>
+</div>
+{% endblock %}

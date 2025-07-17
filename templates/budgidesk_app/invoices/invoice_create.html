@@ -1,6 +1,12 @@
 {% extends 'budgidesk_app/base.html' %}
-{% block title %}Create Invoice{% endblock %}
 {% block content %}
-<h2>Create a new invoice</h2>
-<p>This is a placeholder for the invoice creation form.</p>
+  <div class="container">
+    <h1>Create Invoice</h1>
+    <p>You have created {{ invoice_count }} invoices so far.</p>
+
+    <form method="post" action="{% url 'invoice_create' %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary">Create Invoice</button>
+    </form>
+  </div>
 {% endblock %}
