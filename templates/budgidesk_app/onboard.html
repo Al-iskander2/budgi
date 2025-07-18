@@ -1,113 +1,219 @@
+{% extends 'budgidesk_app/base.html' %}
 {% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta charset="UTF-8"/>
   <title>Onboarding</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #fff; margin:0; padding:2rem; text-align:center; }
-    header { margin-bottom:1rem; }
-    header h2 { color:#324EA2; font-size:1.8rem; margin-bottom:.5rem; }
-    header p { color:#555; font-size:1.1rem; margin:0 auto 1rem; max-width:600px; }
-    #progress { color:#777; margin-bottom:1rem; }
-    .step { display:none; }
-    .step.active { display:block; }
-    .step-content { opacity:0; transform:translateY(40px); }
-    .step-content p, label { font-size:1.2rem; color:#333; margin:1rem 0; }
-    input, select { padding:.8rem; font-size:1rem; width:300px; max-width:90%; margin:.5rem auto; display:block; border:1px solid #ccc; border-radius:6px; }
-    .buttons { margin-top:1.5rem; }
-    button, .skip-btn { padding:.7rem 1.4rem; border:none; border-radius:5px; cursor:pointer; margin:.3rem; }
-    button { background:#324EA2; color:#fff; }
-    button:hover { background:#22367e; }
-    .skip-btn { background: none; color: #324EA2; text-decoration:underline; font-size:.9rem; }
-    .skip-btn:hover { color:#22367e; }
-    .privacy { font-size:.8rem; color:#777; margin-top:.5rem; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f5f6fa;
+      margin: 0;
+      padding: 2rem;
+      text-align: center;
+      color: #333;
+    }
+    .container {
+      width: 90%;
+      
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    header h2 {
+      color: #324EA2;
+      font-size: 1.8rem;
+      margin-bottom: .3rem;
+    }
+    header p, #progress {
+      color: #555;
+      margin: 0.3rem 0 1.5rem;
+    }
+    .progress-bar {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+    .circle {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: #ccc;
+      margin: 0 .3rem;
+      transition: background .3s;
+    }
+    .circle.active {
+      background: #324EA2;
+    }
+    .step {
+      display: none;
+    }
+    .step.active {
+      display: block;
+    }
+    .step-content {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity .5s ease, transform .5s ease;
+    }
+    label {
+      display: block;
+      text-align: left;
+      margin: 1rem 0 .3rem;
+      font-weight: 500;
+    }
+    input, select, button {
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+    input, select {
+      padding: .8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      transition: border-color .3s, box-shadow .3s;
+    }
+    input:focus, select:focus {
+      border-color: #324EA2;
+      box-shadow: 0 0 6px rgba(50,78,162,0.3);
+      outline: none;
+    }
+    button {
+      padding: 1rem;
+      background: #324EA2;
+      color: #fff;
+      font-size: 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background .3s;
+    }
+    button:hover {
+      background: #22367e;
+    }
+    .skip-btn {
+      background: none;
+      color: #324EA2;
+      text-decoration: underline;
+      font-size: .9rem;
+    }
+    .skip-btn:hover {
+      color: #22367e;
+    }
   </style>
 </head>
 <body>
+  <div class="container">
+    <header>
+      <h2 id="mainHeader">Hey there! Let’s get you set up with BudsiDesk.</h2>
+      <p id="subHeader">Answer one quick question at a time—easy and breezy!</p>
+      <p id="progress">Step 1 of 8</p>
+      <div class="progress-bar">
+        <span class="circle active"></span>
+        <span class="circle"></span>
+        <span class="circle"></span>
+        <span class="circle"></span>
+        <span class="circle"></span>
+        <span class="circle"></span>
+        <span class="circle"></span>
+        <span class="circle"></span>
+      </div>
+    </header>
 
-<header>
-  <h2 id="mainHeader">Hey there! Let’s get you set up with BudsiDesk.</h2>
-  <p id="subHeader">Answer one quick question at a time—easy and breezy!</p>
-  <p id="progress">Step 1 of 7</p>
-</header>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="step active" id="step1">
+        <div class="step-content">
+          <p>Ready to start?</p>
+          <button type="button" onclick="nextStep(1)">Let’s Begin</button>
+        </div>
+      </div>
 
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  <div class="step active" id="step1"><div class="step-content">
-    <p>Ready to start?</p>
-    <button type="button" onclick="nextStep(1)">Let’s Begin</button>
-  </div></div>
+      <div class="step" id="step2"><div class="step-content">
+        <label for="full_name">What’s your full name?</label>
+        <input type="text" id="full_name" name="full_name" required placeholder="Jane Doe">
+        <button type="button" onclick="nextStep(2)">Next</button>
+      </div></div>
 
-  <div class="step" id="step2"><div class="step-content">
-    <p>What’s your full name?</p>
-    <input type="text" name="full_name" required placeholder="Jane Doe">
-    <button type="button" onclick="nextStep(2)">Next</button>
-  </div></div>
+      <div class="step" id="step3"><div class="step-content">
+        <label for="email">Your email address:</label>
+        <input type="email" id="email" name="email" required placeholder="you@example.com">
+        <button type="button" onclick="nextStep(3)">Next</button>
+      </div></div>
 
-  <div class="step" id="step3"><div class="step-content">
-    <p>Your email address:</p>
-    <input type="email" name="email" required placeholder="you@example.com">
-    <button type="button" onclick="nextStep(3)">Next</button>
-  </div></div>
+      <div class="step" id="step4"><div class="step-content">
+        <label for="phone">Your phone number? (optional)</label>
+        <input type="tel" id="phone" name="phone" placeholder="+353 123456789">
+        <button type="button" onclick="nextStep(4)">Next</button>
+        <button type="button" class="skip-btn" onclick="nextStep(4)">Skip</button>
+      </div></div>
 
-  <div class="step" id="step4"><div class="step-content">
-    <p>Your phone number? (optional)</p>
-    <input type="tel" name="phone" placeholder="+353 123456789">
-    <button type="button" onclick="nextStep(4)">Next</button>
-    <button type="button" class="skip-btn" onclick="nextStep(4)">Skip</button>
-  </div></div>
+      <div class="step" id="step5"><div class="step-content">
+        <label for="business_name">Business name (or yours):</label>
+        <input type="text" id="business_name" name="business_name" required placeholder="DesignX">
+        <button type="button" onclick="nextStep(5)">Next</button>
+      </div></div>
 
-  <div class="step" id="step5"><div class="step-content">
-    <p>Business name or your name:</p>
-    <input type="text" name="business_name" required placeholder="DesignX">
-    <button type="button" onclick="nextStep(5)">Next</button>
-  </div></div>
+      <div class="step" id="step6"><div class="step-content">
+        <label for="currency">Preferred currency:</label>
+        <select id="currency" name="currency" required>
+          <option value="">Select...</option>
+          <option value="EUR">EUR</option>
+          <option value="GBP">GBP</option>
+          <option value="USD">USD</option>
+        </select>
+        <button type="button" onclick="nextStep(6)">Next</button>
+      </div></div>
 
-  <div class="step" id="step6"><div class="step-content">
-    <p>Preferred currency:</p>
-    <select name="currency" required>
-      <option value="">Select...</option>
-      <option value="EUR">EUR</option>
-      <option value="GBP">GBP</option>
-      <option value="USD">USD</option>
-    </select>
-    <button type="button" onclick="nextStep(6)">Next</button>
-  </div></div>
+      <div class="step" id="step7"><div class="step-content">
+        <label>VAT registered?</label>
+        <input type="checkbox" id="vat_registered" name="vat_registered">
+        <label for="vat_number">VAT number (if applicable):</label>
+        <input type="text" id="vat_number" name="vat_number" placeholder="IE1234567A">
+        <label for="pps_number">PPS number (optional):</label>
+        <input type="text" id="pps_number" name="pps_number" placeholder="1234567AB">
+        <button type="button" onclick="nextStep(7)">Next</button>
+      </div></div>
 
-  <div class="step" id="step7"><div class="step-content">
-    <p>All set! Submit to finish:</p>
-    <button type="submit">Finish</button>
-  </div></div>
-</form>
+      <div class="step" id="step8"><div class="step-content">
+        <label for="iban">Your IBAN:</label>
+        <input type="text" id="iban" name="iban" placeholder="IE29AIBK93115212345678">
+        <label for="logo">Upload logo (jpeg/png):</label>
+        <input type="file" id="logo" name="logo" accept="image/png, image/jpeg">
+        <button type="submit">Finish</button>
+      </div></div>
+    </form>
+  </div>
 
-<script>
-  const headers = [
-    { title:"Hey there! Let’s get you set up with BudsiDesk.", sub:"Answer one quick question at a time—easy and breezy!" },
-    { title:"What’s your full name?", sub:"This helps us personalize your experience." },
-    { title:"Your email address", sub:"We’ll send your dashboard there." },
-    { title:"Your phone number (optional)", sub:"Help us contact you quickly if needed." },
-    { title:"Business name", sub:"What should we call your work?" },
-    { title:"Preferred currency", sub:"We’ll format your invoices in this currency." },
-    { title:"All done!", sub:"You’re ready to rock. Let’s go!" }
-  ];
-  const total = 7;
-  function showStep(i) {
-    document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
-    const st = document.getElementById(`step${i}`);
-    st.classList.add('active');
-    const content = st.querySelector('.step-content');
-    gsap.fromTo(content,{y:40,opacity:0},{y:0,opacity:1,duration:.6,ease:"power3.out"});
-    document.getElementById('progress').textContent = `Step ${i} of ${total}`;
-    document.getElementById('mainHeader').textContent = headers[i-1].title;
-    document.getElementById('subHeader').textContent = headers[i-1].sub;
-  }
-  function nextStep(c) {
-    gsap.to(`#step${c} .step-content`,{y:-40,opacity:0,duration:.4,ease:"power3.in", onComplete:()=>showStep(c+1)});
-  }
-  document.addEventListener("DOMContentLoaded",()=>showStep(1));
-</script>
+  <script>
+    const headers = [ /*...igual que antes...*/ ];
+    const total = headers.length;
+    function showStep(i) {
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.progress-bar .circle')
+              .forEach((c, idx) => c.classList.toggle('active', idx < i));
+      const st = document.getElementById(`step${i}`);
+      st.classList.add('active');
+      const content = st.querySelector('.step-content');
+      gsap.fromTo(content, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: .6, ease: "power3.out" });
+      document.getElementById('progress').textContent = `Step ${i} of ${total}`;
+      document.getElementById('mainHeader').textContent = headers[i-1].title;
+      document.getElementById('subHeader').textContent = headers[i-1].sub;
+    }
+    function nextStep(c) {
+      gsap.to(`#step${c} .step-content`, {
+        y: -40, opacity: 0, duration: .4, ease: "power3.in",
+        onComplete: () => showStep(c+1)
+      });
+    }
+    document.addEventListener("DOMContentLoaded", () => showStep(1));
+  </script>
 </body>
 </html>
 {% endblock %}

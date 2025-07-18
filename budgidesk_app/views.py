@@ -46,28 +46,28 @@ def register_view(request):
 
 @login_required
 def invoice_create_view(request):
-    debug("Accessing invoice_create_view")
-    check_template_exists("budgidesk_app/invoices/invoice_create.html")
-
-    profile = FiscalProfile.objects.get(user=request.user)
+    try:
+        profile = FiscalProfile.objects.get(user=request.user)
+    except FiscalProfile.DoesNotExist:
+        return redirect('onboarding')  # Si no hay perfil fiscal, redirige al onboarding
 
     if request.method == 'POST':
         profile.invoice_count += 1
         profile.save()
-        debug(f"{request.user.username} invoice_count = {profile.invoice_count}")
 
+        # Lógica de plan Lite (máximo 5 facturas)
         if request.user.plan == 'lite' and profile.invoice_count > 5:
-            debug("Lite user exceeded invoice limit - redirecting to pricing")
             return redirect('pricing')
 
-        # Simulación de creación exitosa
         return render(request, "budgidesk_app/invoices/invoice_created.html", {
             'profile': profile
         })
 
+    # GET: muestra el formulario de factura junto con contador
     return render(request, "budgidesk_app/invoices/invoice_create.html", {
         'invoice_count': profile.invoice_count
     })
+
 
 
 @require_plan('smart')
@@ -130,10 +130,15 @@ def onboarding_view(request):
         FiscalProfile.objects.create(
             user=request.user,
             full_name=request.POST.get("full_name"),
-            pps_number=request.POST.get("pps_number"),
-            birthdate=request.POST.get("birthdate"),
-            income=request.POST.get("income"),
-            business_type=request.POST.get("business_type"),
+            email=request.POST.get("email"),
+            phone=request.POST.get("phone"),
+            business_name=request.POST.get("business_name"),
+            currency=request.POST.get("currency"),
+            vat_registered=('vat_registered' in request.POST),
+            vat_number=request.POST.get("vat_number", ''),
+            pps_number=request.POST.get("pps_number", ''),
+            iban=request.POST.get("iban", ''),
+            logo=request.FILES.get("logo"),
         )
         debug(f"FiscalProfile created for {request.user.username}")
         return redirect("dashboard")
