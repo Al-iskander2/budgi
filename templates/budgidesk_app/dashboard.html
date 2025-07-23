@@ -83,8 +83,8 @@
   .dashboard-charts {
     display: flex;
     flex-wrap: wrap;
-    gap: 2rem;
-    margin: 2rem;
+    gap: 4rem;
+    margin: -5rem;
     justify-content: center;
   }
 
@@ -117,36 +117,9 @@
   }
 </style>
 
-<h2>Welcome to your dashboard</h2>
-
-<!-- Navegación -->
 <div class="dashboard-grid">
-  <div class="card-button">
-    <h3>Create Invoice</h3>
-    <button onclick="location.href='{% url "invoice_create" %}'">Go</button>
-  </div>
-  <div class="card-button">
-    <h3>View Invoices</h3>
-    <button onclick="location.href='{% url "invoice_list" %}'">Go</button>
-  </div>
-  <div class="card-button">
-    <h3>Tax Report</h3>
-    <button onclick="location.href='{% url "tax_report" %}'">Go</button>
-  </div>
-  <div class="card-button">
-    <h3>Income & Expenses</h3>
-    <button onclick="location.href='{% url "balance_overview" %}'">Go</button>
-  </div>
-  <div class="card-button">
-    <h3>Legal Templates</h3>
-    <button onclick="location.href='{% url "legal_templates" %}'">Go</button>
-  </div>
-  <div class="card-button">
-    <h3>Reminders</h3>
-    <button onclick="location.href='{% url "reminders" %}'">Go</button>
-  </div>
+  <h2>Welcome to your dashboard</h2>
 </div>
-
 
 
 <!-- Sección Visual: Charts & Deadlines -->
@@ -171,6 +144,54 @@
 
 <canvas id="incomeChart" style="height:200px;"></canvas>
 <canvas id="budgetChart" style="height:200px;"></canvas>
+
+<!-- Navegación -->
+<div class="dashboard-grid">
+  <div class="card-button">
+    <h3>Invoice</h3>
+    <button onclick="location.href='{% url "invoice_create" %}'">Go</button>
+  </div>
+  <div class="card-button">
+    <h3>Pulse</h3>
+    <button onclick="location.href='{% url "dash_pulse" %}'">Go</button>
+  </div>
+  <div class="card-button">
+    <h3>Tax</h3>
+    <button onclick="location.href='{% url "dash_tax" %}'">Go</button>
+  </div>
+  <div class="card-button">
+    <h3>Flow</h3>
+    <button onclick="location.href='{% url "dash_flow" %}'">Go</button>
+  </div>
+  <div class="card-button">
+    <h3>Docs</h3>
+    <button onclick="location.href='{% url "dash_doc" %}'">Go</button>
+  </div>
+  <div class="card-button">
+    <h3>Buzz</h3>
+    <button onclick="location.href='{% url "dash_buzz" %}'">Go</button>
+  </div>
+  <div class="card-button">
+    <h3>Track</h3>
+    <button onclick="location.href='{% url "dash_track" %}'">Go</button>
+  </div>
+  <div class="card-button">
+    <h3>Nest</h3>
+    <button onclick="location.href='{% url "dash_nest" %}'">Go</button>
+  </div>
+  <div class="card-button">
+    <h3>Budsi Whiz</h3>
+    <button onclick="location.href='{% url "dash_whiz" %}'">Go</button>
+  </div>
+  <div class="card-button">
+    <h3>Help Support</h3>
+    <button onclick="location.href='{% url "dash_help" %}'">Go</button>
+  </div>
+</div>
+
+
+
+
 
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

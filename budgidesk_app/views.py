@@ -6,8 +6,11 @@ from django.views.decorators.csrf import csrf_exempt
 from .forms import CustomUserCreationForm
 from .models import FiscalProfile
 
-from logic.plan_tiers import require_plan  # podrías eliminar si ya no lo usas aquí
+from logic.plan_tiers import require_plan
 from logic.debugger import debug, check_template_exists
+
+from logic.fill_pdf import generate_invoice_pdf
+from django.http import FileResponse
 
 
 def login_view(request):
@@ -49,25 +52,23 @@ def invoice_create_view(request):
     try:
         profile = FiscalProfile.objects.get(user=request.user)
     except FiscalProfile.DoesNotExist:
-        return redirect('onboarding')  # Si no hay perfil fiscal, redirige al onboarding
+        return redirect('onboarding')
 
     if request.method == 'POST':
         profile.invoice_count += 1
         profile.save()
 
-        # Lógica de plan Lite (máximo 5 facturas)
         if request.user.plan == 'lite' and profile.invoice_count > 5:
             return redirect('pricing')
 
-        return render(request, "budgidesk_app/invoices/invoice_created.html", {
+        return render(request, "budgidesk_app/dash/invoice/invoice_created.html", {
             'profile': profile
         })
 
-    # GET: muestra el formulario de factura junto con contador
-    return render(request, "budgidesk_app/invoices/invoice_create.html", {
+    return render(request, "budgidesk_app/dash/invoice/invoice_create.html", {
         'invoice_count': profile.invoice_count
     })
-
+ 
 
 
 @require_plan('smart')
@@ -192,3 +193,49 @@ def dashboard_view(request):
     debug("Accessing dashboard_view")
     check_template_exists("budgidesk_app/dashboard.html")
     return render(request, "budgidesk_app/dashboard.html")
+
+
+# 🔽 Nuevas vistas para las secciones movidas al subdirectorio "dash"
+
+@login_required
+def flow_view(request):
+    return render(request, "budgidesk_app/dash/flow/flow.html")
+
+@login_required
+def pulse_view(request):
+    return render(request, "budgidesk_app/dash/pulse/pulse.html")
+
+@login_required
+def buzz_view(request):
+    return render(request, "budgidesk_app/dash/buzz/buzz.html")
+
+@login_required
+def track_view(request):
+    return render(request, "budgidesk_app/dash/track/track.html")
+
+@login_required
+def tax_view(request):
+    return render(request, "budgidesk_app/dash/tax/tax_report.html")
+
+@login_required
+def doc_view(request):
+    return render(request, "budgidesk_app/dash/doc/legal_templates.html")
+
+@login_required
+def nest_view(request):
+    return render(request, "budgidesk_app/dash/nest/nest.html")
+
+@login_required
+def whiz_view(request):
+    return render(request, "budgidesk_app/dash/whiz/whiz.html")
+
+@login_required
+def help_view(request):
+    return render(request, "budgidesk_app/dash/help_support/support.html")
+
+
+@login_required
+def create_invoice_pdf_view(request):
+    profile = FiscalProfile.objects.get(user=request.user)
+    pdf_path = generate_invoice_pdf(profile)
+    return FileResponse(open(pdf_path, 'rb'), as_attachment=True, filename="invoice.pdf")

@@ -2,7 +2,10 @@ from django.urls import path
 from django.contrib.auth.views import LogoutView
 from . import views
 
+
+
 urlpatterns = [
+    # Página de inicio
     path("", views.intro_view, name="intro"),
 
     # Autenticación
@@ -37,4 +40,19 @@ urlpatterns = [
 
     # Precios / Upgrade
     path("pricing/", views.pricing_view, name="pricing"),
+
+    # 🔽 Rutas nuevas para dashboard (archivos reorganizados en /dash)
+    path("dash/flow/", views.flow_view, name="dash_flow"),
+    path("dash/pulse/", views.pulse_view, name="dash_pulse"),
+    path("dash/buzz/", views.buzz_view, name="dash_buzz"),
+    path("dash/track/", views.track_view, name="dash_track"),
+    path("dash/tax/", views.tax_view, name="dash_tax"),
+    path("dash/doc/", views.doc_view, name="dash_doc"),
+    path("dash/nest/", views.nest_view, name="dash_nest"),
+    path("dash/whiz/", views.whiz_view, name="dash_whiz"),
+    path("dash/help/", views.help_view, name="dash_help"),
+
+    # Crear las invoices llenando el pdf 
+    path("invoice/generate/", views.create_invoice_pdf_view, name="generate_invoice"),
+
 ]
