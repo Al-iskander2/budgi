@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <title>Checkout – BudsiDesk</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://js.stripe.com/v3/"></script>
   <style>
     :root {
       --green: #40d466;
@@ -55,13 +56,11 @@
       font-size: 1rem;
     }
 
-    .flex-group {
-      display: flex;
-      gap: 1rem;
-    }
-
-    .flex-group input {
-      flex: 1;
+    .StripeElement {
+      padding: 0.8rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
     }
 
     button {
@@ -88,6 +87,13 @@
       text-align: center;
       margin-top: 1rem;
     }
+
+    #card-errors {
+      color: red;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -95,9 +101,9 @@
   <div class="checkout-container">
     <h2>Upgrade to {{ name }}</h2>
 
-    <form method="POST" action="{% url 'process_payment' %}">
+    <form id="payment-form">
       {% csrf_token %}
-      <input type="hidden" name="plan_code" value="{{ plan_code }}">
+      <input type="hidden" name="plan_code" id="plan_code" value="{{ plan_code }}">
 
       <label for="name">Cardholder Name</label>
       <input type="text" id="name" name="name" placeholder="Jane Doe" required>
@@ -105,27 +111,77 @@
       <label for="email">Email</label>
       <input type="email" id="email" name="email" placeholder="you@example.com" required>
 
-      <label for="card_number">Card Number</label>
-      <input type="text" id="card_number" name="card_number" placeholder="1234 5678 9012 3456" required>
+      <label for="card-element">Card Details</label>
+      <div id="card-element"><!-- Stripe.js will insert the card UI here --></div>
 
-      <div class="flex-group">
-        <div>
-          <label for="exp_month">Expiry</label>
-          <input type="text" id="exp_month" name="exp_month" placeholder="MM/YY" required>
-        </div>
-        <div>
-          <label for="cvc">CVC</label>
-          <input type="text" id="cvc" name="cvc" placeholder="123" required>
-        </div>
-      </div>
+      <div id="card-errors" role="alert"></div>
 
-      <button type="submit">Confirm Payment</button>
+      <button type="submit" id="submit-button">Confirm Payment</button>
 
       <p class="small-text">
         You will be charged €{{ amount }}/{{ interval }}. Cancel anytime.
       </p>
     </form>
   </div>
+
+  <script>
+    const stripe = Stripe("{{ STRIPE_PUBLIC_KEY }}");
+    const elements = stripe.elements();
+    const card = elements.create("card");
+    card.mount("#card-element");
+
+    const form = document.getElementById('payment-form');
+    const errorDisplay = document.getElementById('card-errors');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const planCode = document.getElementById("plan_code").value;
+
+      // Llama al backend para crear un PaymentIntent
+      const response = await fetch("/crear-intento-pago/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: JSON.stringify({
+          amount: {{ amount|floatformat:0 }}00,  // convierte euros a centavos
+          email: email,
+          name: name,
+          plan_code: planCode
+        })
+      });
+
+      const data = await response.json();
+
+      if (!data.clientSecret) {
+        errorDisplay.textContent = "Error al iniciar el pago.";
+        return;
+      }
+
+      const result = await stripe.confirmCardPayment(data.clientSecret, {
+        payment_method: {
+          card: card,
+          billing_details: {
+            name: name,
+            email: email
+          }
+        }
+      });
+
+      if (result.error) {
+        errorDisplay.textContent = result.error.message;
+      } else {
+        if (result.paymentIntent.status === 'succeeded') {
+          alert(" ¡Pago realizado con éxito!");
+          window.location.href = "/gracias/";  // Redirige a página de éxito si tienes una
+        }
+      }
+    });
+  </script>
 
 </body>
 </html>

@@ -41,7 +41,7 @@ urlpatterns = [
     # Precios / Upgrade
     path("pricing/", views.pricing_view, name="pricing"),
 
-    # 🔽 Rutas nuevas para dashboard (archivos reorganizados en /dash)
+    #  Rutas nuevas para dashboard (archivos reorganizados en /dash)
     path("dash/flow/", views.flow_view, name="dash_flow"),
     path("dash/pulse/", views.pulse_view, name="dash_pulse"),
     path("dash/buzz/", views.buzz_view, name="dash_buzz"),
@@ -55,4 +55,10 @@ urlpatterns = [
     # Crear las invoices llenando el pdf 
     path("invoice/generate/", views.create_invoice_pdf_view, name="generate_invoice"),
 
+    # para hacer los pagos de stripe 
+    path('pago/', views.payment_page, name='payment-page'),
+    path('crear-intento-pago/', views.create_payment_intent_view, name='create-payment-intent'),
+
 ]
+
+

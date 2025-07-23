@@ -1,3 +1,8 @@
+###################
+# librerias
+#################
+
+
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
@@ -12,7 +17,17 @@ from logic.debugger import debug, check_template_exists
 from logic.fill_pdf import generate_invoice_pdf
 from django.http import FileResponse
 
+# librerias para stripe
+from django.shortcuts import render
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
+import json
 
+from logic import stripe as stripe_logic
+
+
+######################################
 def login_view(request):
     debug("Accessing login_view")
     check_template_exists("budgidesk_app/login.html")
@@ -239,3 +254,32 @@ def create_invoice_pdf_view(request):
     profile = FiscalProfile.objects.get(user=request.user)
     pdf_path = generate_invoice_pdf(profile)
     return FileResponse(open(pdf_path, 'rb'), as_attachment=True, filename="invoice.pdf")
+
+# Funciones para los pago tipo stripe     
+
+
+@csrf_exempt
+def create_payment_intent_view(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        amount = data.get("amount", 1000)  # 10.00 euros, en centavos
+        intent = stripe_logic.create_payment_intent(amount)
+        return JsonResponse({"clientSecret": intent.client_secret})
+    return JsonResponse({"error": "Método no permitido"}, status=405)
+
+@login_required
+def payment_page(request):
+    debug("Accessing checkout_view")  # puedes actualizar el texto si quieres
+    plan = request.GET.get('plan', 'smart_monthly')
+    plan_options = {
+        'smart_monthly': {'name': 'Budsi Smart', 'amount': 9, 'interval': 'mes'},
+        'elite_monthly': {'name': 'Budsi Elite', 'amount': 12, 'interval': 'mes'},
+        'smart_annual': {'name': 'Budsi Smart (Anual)', 'amount': 90, 'interval': 'año'},
+        'elite_annual': {'name': 'Budsi Elite (Anual)', 'amount': 120, 'interval': 'año'},
+    }
+    if plan not in plan_options:
+        plan = 'smart_monthly'
+    details = plan_options[plan]
+    details['plan_code'] = plan
+    details['STRIPE_PUBLIC_KEY'] = settings.STRIPE_PUBLIC_KEY 
+    return render(request, 'budgidesk_app/payment.html', details)

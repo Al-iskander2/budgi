@@ -11,7 +11,11 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
-import os  # 👈 Necesario para unir rutas
+import os  #  Necesario para unir rutas
+
+from dotenv import load_dotenv
+load_dotenv()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -136,3 +140,7 @@ AUTH_USER_MODEL = 'budgidesk_app.CustomUser'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Variables stripe 
+STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
